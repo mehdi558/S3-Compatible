@@ -19,6 +19,7 @@ from .const import (
     CONF_ACCESS_KEY_ID,
     CONF_BUCKET,
     CONF_PREFIX,
+    CONF_REGION,
     CONF_ENDPOINT_URL,
     CONF_SECRET_ACCESS_KEY,
     DATA_BACKUP_AGENT_LISTENERS,
@@ -40,6 +41,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: S3ConfigEntry) -> bool:
         # pylint: disable-next=unnecessary-dunder-call
         client = await session.create_client(
             "s3",
+            region_name=data.get(CONF_REGION),
             endpoint_url=data.get(CONF_ENDPOINT_URL),
             aws_secret_access_key=data[CONF_SECRET_ACCESS_KEY],
             aws_access_key_id=data[CONF_ACCESS_KEY_ID],
