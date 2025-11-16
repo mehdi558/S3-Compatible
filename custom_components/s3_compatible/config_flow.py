@@ -65,6 +65,7 @@ class S3ConfigFlow(ConfigFlow, domain=DOMAIN):
                 session = AioSession()
                 async with session.create_client(
                     "s3",
+                    region_name='garage'
                     endpoint_url=user_input.get(CONF_ENDPOINT_URL),
                     aws_secret_access_key=user_input[CONF_SECRET_ACCESS_KEY],
                     aws_access_key_id=user_input[CONF_ACCESS_KEY_ID],
