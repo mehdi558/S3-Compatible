@@ -20,6 +20,7 @@ from .const import (
     BOTO_CONFIG,
     CONF_ACCESS_KEY_ID,
     CONF_BUCKET,
+    CONF_REGION,
     CONF_ENDPOINT_URL,
     CONF_SECRET_ACCESS_KEY,
     CONF_PREFIX,
@@ -37,6 +38,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         ),
         vol.Required(CONF_BUCKET): cv.string,
         vol.Optional(CONF_PREFIX, default=""): cv.string,
+        vol.Required(CONF_REGION): cv.string,
         vol.Required(CONF_ENDPOINT_URL, default=DEFAULT_ENDPOINT_URL): TextSelector(
             config=TextSelectorConfig(type=TextSelectorType.URL)
         ),
@@ -57,6 +59,7 @@ class S3ConfigFlow(ConfigFlow, domain=DOMAIN):
             self._async_abort_entries_match(
                 {
                     CONF_BUCKET: user_input[CONF_BUCKET],
+                    CONF_REGION: user_input[CONF_REGION],
                     CONF_ENDPOINT_URL: user_input[CONF_ENDPOINT_URL],
                 }
             )
@@ -65,7 +68,7 @@ class S3ConfigFlow(ConfigFlow, domain=DOMAIN):
                 session = AioSession()
                 async with session.create_client(
                     "s3",
-                    region_name='garage'
+                    region_name=user_input.get(CONF_REGION),
                     endpoint_url=user_input.get(CONF_ENDPOINT_URL),
                     aws_secret_access_key=user_input[CONF_SECRET_ACCESS_KEY],
                     aws_access_key_id=user_input[CONF_ACCESS_KEY_ID],
